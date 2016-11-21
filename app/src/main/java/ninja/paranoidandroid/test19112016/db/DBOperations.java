@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import java.util.ArrayList;
 import ninja.paranoidandroid.test19112016.model.User;
 
@@ -96,11 +95,67 @@ public class DBOperations {
 
         return cursor;
     }
+
+    public Cursor getAllJobs(){
+
+        Cursor cursor = mSQLiteDataBase.query(DBContract.Job.TABLE_NAME, new String[]{
+                DBContract.Job.COLUMN_JOB_TITLE,
+                DBContract.Job.COLUMN_JOB_DESCRIPTION,
+                DBContract.Job.COLUMN_JOB_STATE_NUMBER
+        },null, null, null, null, null);
+
+        return cursor;
+    }
 // Finish later.
-//    public int updateUser(String[] whereClauser, String[] whereArgs){
+    public int updateUser(User user, String whereClause, String[] whereArgs){
+        int numberUpdatedRows = 0;
+
+        if(user != null) {
+
+            ContentValues updatedUser = new ContentValues();
+            updatedUser.put(DBContract.User.COLUMN_USER_NAME, user.getName());
+            updatedUser.put(DBContract.User.COLUMN_USER_PASSWORD, user.getPassword());
+            updatedUser.put(DBContract.User.COLUMN_USER_MAIL, user.getMall());
+            updatedUser.put(DBContract.User.COLUMN_USER_ADDRESS, user.getAddress());
+            updatedUser.put(DBContract.User.COLUMN_USER_JOB_ID, user.getJobId());
+
+            numberUpdatedRows = mSQLiteDataBase.update(DBContract.User.TABLE_NAME, updatedUser, whereClause, whereArgs);
+        }
+
+        return numberUpdatedRows;
+    }
+
+    public Cursor getUserJob(String[] whereArgs){
+
+
+        String where = DBContract.User.TABLE_NAME + "." + DBContract.User.COLUMN_USER_JOB_ID + "=?";
+        Cursor cursor = null;
+        if(whereArgs != null) {
+            cursor = mSQLiteDataBase.query(DBContract.User.TABLE_NAME + " , " + DBContract.Job.TABLE_NAME,
+                    new String[]{
+                            DBContract.User.COLUMN_USER_NAME,
+                            DBContract.Job.COLUMN_JOB_TITLE
+                    }, where, whereArgs, null, null, null);
+        }
+        return cursor;
+
+    }
+
+
+//    public Cursor getUserJob(){
 //
-//        mSQLiteDataBase.update();
-//        return 0;
+//        Cursor cursor = mSQLiteDataBase.query(DBContract.User.TABLE_NAME + " LEFT OUTER JOIN " + DBContract.Job.TABLE_NAME + " ON " +
+//                        DBContract.User.TABLE_NAME+ "." +DBContract.User.COLUMN_USER_JOB_ID + " = " + DBContract.Job.TABLE_NAME + "." +DBContract.Job.COLUMN_ID,
+//                new String[]{
+//                        DBContract.User.COLUMN_USER_NAME,
+//                        DBContract.User.COLUMN_USER_PASSWORD,
+//                        DBContract.User.COLUMN_USER_MAIL,
+//                        DBContract.User.COLUMN_USER_ADDRESS,
+//                        DBContract.User.COLUMN_USER_JOB_ID
+//                },null, null, null, null, null);
+//
+//        return cursor;
+//
 //    }
 
 

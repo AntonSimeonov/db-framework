@@ -30,6 +30,7 @@ public class SQLiteAllQueries extends Fragment {
     private SQLiteDatabase mSQLiteDatabase;
     private AsyncQueryExecutor mAsyncQueryExecutor;
     private AsyncInsertExecutor mAsyncInsertExecutor;
+    private AsyncUpdateExecutor mAsyncUpdateExecutor;
 
     private Activity mContainerActivity;
     private CallBack mCallBack;
@@ -73,6 +74,7 @@ public class SQLiteAllQueries extends Fragment {
         super.onAttach(activity);
         mCallBack = (CallBack) activity;
         mContainerActivity = (MainActivity) activity;
+
     }
 
 //    @Override
@@ -83,18 +85,24 @@ public class SQLiteAllQueries extends Fragment {
 //        mCallBack = (CallBack) mContainerActivity;
 //    }
 
-    public void executeQuery(SQLiteQuery sqLiteQuery){
-
+    public void query(SQLiteQuery sqLiteQuery){
         mAsyncQueryExecutor = new AsyncQueryExecutor();
-//      mAsyncQueryExecutor.setSQLitedatabase(mSQLiteDatabase);
         mAsyncQueryExecutor.execute(sqLiteQuery);
-
     }
 
     //Get called form activity, and gets a instance of SQLiteInsertAbstract class
-    public void insertNewUser(SQLiteInsert sqLiteInsert){
+    public void insert(SQLiteInsert sqLiteInsert){
         mAsyncInsertExecutor = new AsyncInsertExecutor();
         mAsyncInsertExecutor.execute(sqLiteInsert);
+    }
+
+    public void update(SQLiteUpdate sqLiteUpdate){
+        mAsyncUpdateExecutor = new AsyncUpdateExecutor();
+        mAsyncUpdateExecutor.execute(sqLiteUpdate);
+    }
+
+    public void delete(SQLiteDelete sqLiteDelete){
+
     }
 
     //Sets SQliteOpenHelper for the fragment instance
@@ -110,10 +118,10 @@ public class SQLiteAllQueries extends Fragment {
     //Interface for returning result in activity
     public interface CallBack{
 
-        void onCursorReturned(Cursor cursor);
-        void onIsertIndexReturned(Long newInsertindex);
-        void onNumberUpdatedReturned(Integer numberUpdated);
-        void onNumberDeletedReturned(Integer numberDeleted);
+         void onCursorReturned(Cursor cursor);
+         void onIsertIndexReturned(Long newInsertindex);
+         void onNumberUpdatedReturned(Integer numberUpdated);
+         void onNumberDeletedReturned(Integer numberDeleted);
 
     }
 
